@@ -2,6 +2,7 @@
 library(limma)
 
 # Extract metadata and metabolite data
+data <- read.csv(data, file = "data/FormattedData.csv",row.names = FALSE)
 metab_data <- data
 metadata <- metab_data[, 1:7]  # Columns: SpecimenID, SampleGroup, etc.
 metabolites <- metab_data[, 8:ncol(metab_data)]

@@ -71,6 +71,7 @@ for (i in 5:ncol(data)) {
   data[[i]] <- as.numeric(data[[i]])
 }
 
+write.csv(data, file = "data/FormattedData.csv",row.names = FALSE)
 
 # Define target SG (usually 1.020)
 target_SG <- 1.020

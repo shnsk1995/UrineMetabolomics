@@ -2,6 +2,7 @@ library(pheatmap)
 library(dplyr)
 
 # Step 1: Filter top 30 significant metabolites (nominal p < 0.05)
+results <- read.csv(file = "data/LimmaDEResults.csv", row.names = 1)
 sig_metabs <- results %>%
   filter(P.Value < 0.05) %>%
   arrange(P.Value) %>%
