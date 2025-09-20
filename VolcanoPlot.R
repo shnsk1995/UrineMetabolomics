@@ -1,13 +1,12 @@
-library(ggplot2)
-library(ggrepel)  # for nice non-overlapping labels
+
 
 # Example: assuming your limma results dataframe is called "res"
-results <- read.csv(file = "data/LimmaDEResults.csv", row.names = 1)
+results <- read.csv(file = "data/LimmaResults/NoCov/RAW/RAW_NoCov_LimmaResults.csv", row.names = 1)
 df <- data.frame(Metabolite = rownames(results), results)
 
 # Thresholds
 logFC_cutoff <- 0.1
-p_cutoff <- 0.05
+p_cutoff <- 0.01
 
 # Add a significance flag
 df$Significant <- with(df,
