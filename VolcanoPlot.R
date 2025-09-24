@@ -48,3 +48,64 @@ p <- ggplot(df, aes(x = logFC, y = -log10(P.Value), color = Significant)) +
 # Save plot
 ggsave("plots/volcano_plot.png", p, width = 8, height = 6, dpi = 300)
 ggsave("plots/volcano_plot.pdf", p, width = 8, height = 6)
+
+
+#############################Custom-Metabolites##########################################
+# Load results
+results <- read.csv(file = "data/LimmaResults/NoCov/RAW/RAW_NoCov_LimmaResults.csv", 
+                    row.names = 1)
+df <- data.frame(Metabolite = rownames(results), results)
+
+# Thresholds
+logFC_cutoff <- 0.1
+p_cutoff <- 0.05
+
+# Custom vector of metabolites to highlight
+metabolites_of_interest <- c("UMP","CMP","Deoxyuridine","dTDP","Thymine","dTMP")  # <-- replace with your list
+
+# Flag significance (optional: still keep thresholds, but highlight only chosen metabolites)
+df$Significant <- with(df,
+                       ifelse(abs(logFC) >= logFC_cutoff & P.Value <= p_cutoff,
+                              "Significant", "Not Significant"))
+
+# Overwrite with custom highlight logic
+df$`Pyrimidine Metabolism pathway` <- ifelse(df$Metabolite %in% metabolites_of_interest, "Pyrimidine Metabolism pathway", "Other")
+
+# Labels: only show custom metabolites
+df$Label <- ifelse(df$Metabolite %in% metabolites_of_interest, df$Metabolite, NA)
+
+# Create main title and subtitle
+main_title <- "Volcano Plot"
+sub_title <- paste0("Thresholds: |log2FC| ≥ ", logFC_cutoff,
+                    ", p ≤ ", p_cutoff,
+                    "\nMetabolites in Pyrimidine metabolism pathway")
+
+# Plot
+p <- ggplot(df, aes(x = logFC, y = -log10(P.Value))) +
+  geom_point(aes(color = `Pyrimidine Metabolism pathway`), alpha = 0.8, size = 2) +
+  geom_vline(xintercept = c(-logFC_cutoff, logFC_cutoff),
+             linetype = "dashed", color = "black") +
+  geom_hline(yintercept = -log10(p_cutoff),
+             linetype = "dashed", color = "black") +
+  geom_text_repel(aes(label = Label), size = 4, max.overlaps = Inf) +
+  scale_color_manual(values = c("Other" = "grey60",
+                                "Pyrimidine Metabolism pathway" = "red")) +
+  labs(title = main_title,
+       subtitle = sub_title,
+       x = "Log2 Fold Change",
+       y = "-Log10 P-value",
+       color = NULL) +
+  theme_classic(base_size = 18) +
+  theme(
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),  
+    plot.subtitle = element_text(size = 18, hjust = 0.5),
+    axis.title = element_text(size = 20, face = "bold"),
+    axis.text = element_text(size = 16),
+    legend.title = element_text(size = 18),
+    legend.text = element_text(size = 16)
+  )
+
+# Save plot
+ggsave("plots/volcano_plot_custom.png", p, width = 12, height = 6, dpi = 300)
+ggsave("plots/volcano_plot_custom.pdf", p, width = 12, height = 6)
+

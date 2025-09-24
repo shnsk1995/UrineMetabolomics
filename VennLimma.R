@@ -1,6 +1,4 @@
-library(ggvenn)
-library(openxlsx)
-library(ggplot2)
+
 
 # Function: Perform venn comparisons and save plots + Excel
 performVennComparisons <- function(datasets, covariates, 
@@ -155,7 +153,7 @@ p_covariate <- ggplot(df, aes(x = Set, y = Size, fill = Covariate)) +
     legend.text = element_text(face = "bold"),
     plot.title = element_text(hjust = 0.5)
   ) +
-  labs(title = "Barplot grouped by Covariate", x = " Dataset", y = "Number of significant genes (pval < 0.05)")
+  labs(title = "Barplot grouped by Covariate", x = " Dataset", y = "Number of significant metabolites (pval < 0.05)")
 
 jpeg(file.path(out_dir, paste0("BarPlot_AllResults_Covariate.jpeg")), width = 3000, height = 2000, res = 300)
 print(p_covariate)
@@ -178,7 +176,7 @@ p_dataset <- ggplot(df, aes(x = Set, y = Size, fill = Dataset)) +
     legend.text = element_text(face = "bold"),
     plot.title = element_text(hjust = 0.5)
   ) +
-  labs(title = "Barplot grouped by dataset", x = "Dataset", y = "Number of significant genes (pval < 0.05)")
+  labs(title = "Barplot grouped by dataset", x = "Dataset", y = "Number of significant metabolites (pval < 0.05)")
 
 jpeg(file.path(out_dir, paste0("BarPlot_AllResults_Dataset.jpeg")), width = 3000, height = 2000, res = 300)
 print(p_dataset)
